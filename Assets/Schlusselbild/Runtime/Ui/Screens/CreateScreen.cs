@@ -67,10 +67,10 @@ namespace Schlusselbild.Ui.Screens
 
             RectTransform actions = AddRow(body, "Actions", UiFactory.ButtonHeight, UiFactory.Gap);
 
-            UiButtonHandle compose = UiFactory.CreateButton(actions, "Compose", "Encrypt & preview", ComposePreview, UiTheme.ButtonFontSize, true);
-            UiFactory.SetFlexible(compose.Rect, 1.5f, 1f);
+            UiButtonHandle compose = UiFactory.CreateButton(actions, "Compose", "Encrypt", ComposePreview, UiTheme.ButtonFontSize, true);
+            UiFactory.SetFlexible(compose.Rect, 1.2f, 1f);
 
-            UiButtonHandle export = UiFactory.CreateButton(actions, "Export", "Export PNG", ExportPage, UiTheme.ButtonFontSize);
+            UiButtonHandle export = UiFactory.CreateButton(actions, "Export", "Export", ExportPage, UiTheme.ButtonFontSize);
             UiFactory.SetFlexible(export.Rect, 1f, 1f);
 
             UiButtonHandle selfTest = UiFactory.CreateButton(actions, "SelfTest", "Self-test", RunSelfTest, UiTheme.ButtonFontSize);

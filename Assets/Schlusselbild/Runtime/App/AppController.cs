@@ -81,9 +81,9 @@ namespace Schlusselbild.App
             LoadKey();
             BuildUi();
             BindScanner();
-            ShowHome();
 
             initialized = true;
+            ShowHome();
         }
 
         public void ShowHome()
@@ -516,7 +516,7 @@ namespace Schlusselbild.App
                 return keyError == null ? "not loaded" : keyError;
             }
 
-            return KeyStore.KeySize + " bytes at " + keyPath;
+            return KeyStore.KeySize + "-byte key loaded";
         }
 
         private static StatusKind ClassifyStatus(string message)
@@ -552,7 +552,7 @@ namespace Schlusselbild.App
 
             UiPalette palette = UiTheme.Palette;
 
-            RectTransform shade = UiFactory.Panel(modalLayer, "Modal", new Color(0f, 0f, 0f, 0.7f), true);
+            RectTransform shade = UiFactory.Panel(modalLayer, "Modal", new Color(0f, 0f, 0f, 0.7f), true, 0, false);
             UiFactory.Stretch(shade, 0f, 0f, 0f, 0f);
 
             RectTransform panel = UiFactory.Panel(shade, "ModalPanel", palette.Panel, true);

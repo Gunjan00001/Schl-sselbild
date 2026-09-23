@@ -54,6 +54,10 @@ key.bin
 *.key.bin
 **/key.bin
 
+# ── Large local installers (Meta Quest Developer Hub, Meta XR Simulator) ──────
+/Meta/
+*.msi
+
 # ── Legacy Python reference ──────────────────────────────────────────────────
 legacy/python/.venv/
 legacy/python/**/__pycache__/

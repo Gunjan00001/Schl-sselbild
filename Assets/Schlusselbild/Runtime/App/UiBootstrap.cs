@@ -22,7 +22,6 @@ namespace Schlusselbild.App
         private RectTransform screensRoot;
         private AppController controller;
         private PassthroughScanner scanner;
-        private GraphicRaycaster raycaster;
         private Camera eyeCamera;
         private int placementFramesRemaining;
         private bool built;
@@ -83,8 +82,6 @@ namespace Schlusselbild.App
             {
                 settings.Changed -= HandleSettingsChanged;
             }
-
-            ControllerRayPointer.ClearRegistrations();
         }
 
         public void ApplyCanvasPlacement()
@@ -114,7 +111,7 @@ namespace Schlusselbild.App
                 return;
             }
 
-            OVRManager manager = FindFirstObjectByType<OVRManager>();
+            OVRManager manager = FindAnyObjectByType<OVRManager>();
             if (manager == null)
             {
                 return;
@@ -151,23 +148,18 @@ namespace Schlusselbild.App
 
         private void EnsureEventSystem()
         {
-            EventSystem eventSystem = FindFirstObjectByType<EventSystem>();
+            EventSystem eventSystem = FindAnyObjectByType<EventSystem>();
             if (eventSystem == null)
             {
                 GameObject created = new GameObject("EventSystem");
                 created.transform.SetParent(transform, false);
-                eventSystem = created.AddComponent<EventSystem>();
-            }
-
-            if (eventSystem.GetComponent<BaseInputModule>() == null)
-            {
-                eventSystem.gameObject.AddComponent<StandaloneInputModule>();
+                created.AddComponent<EventSystem>();
             }
         }
 
         private void BuildCanvas()
         {
-            GameObject canvasObject = new GameObject("UiCanvas", typeof(RectTransform), typeof(Canvas), typeof(GraphicRaycaster));
+            GameObject canvasObject = new GameObject("UiCanvas", typeof(RectTransform), typeof(Canvas), typeof(OVRRaycaster));
             canvasObject.transform.SetParent(transform, false);
 
             canvas = canvasObject.GetComponent<Canvas>();
@@ -179,8 +171,6 @@ namespace Schlusselbild.App
             canvasRect.sizeDelta = new Vector2(CanvasWidthPixels, CanvasHeightPixels);
             canvasRect.localScale = new Vector3(1f / UiTheme.PixelsPerMeter, 1f / UiTheme.PixelsPerMeter, 1f / UiTheme.PixelsPerMeter);
 
-            raycaster = canvasObject.GetComponent<GraphicRaycaster>();
-
             RectTransform background = UiFactory.Panel(canvasRect, "Background", UiTheme.Palette.Background, true);
             UiFactory.Stretch(background, 0f, 0f, 0f, 0f);
 
@@ -190,24 +180,12 @@ namespace Schlusselbild.App
 
         private void BuildPointers()
         {
-            ControllerRayPointer.Register(raycaster);
-
-            OVRCameraRig rig = FindFirstObjectByType<OVRCameraRig>();
+            OVRCameraRig rig = FindAnyObjectByType<OVRCameraRig>();
             Transform leftAnchor = rig == null ? null : rig.leftHandAnchor;
             Transform rightAnchor = rig == null ? null : rig.rightHandAnchor;
 
-            CreatePointer("LeftPointer", ControllerRayPointer.Hand.Left, leftAnchor);
-            CreatePointer("RightPointer", ControllerRayPointer.Hand.Right, rightAnchor);
-        }
-
-        private ControllerRayPointer CreatePointer(string name, ControllerRayPointer.Hand hand, Transform anchor)
-        {
-            GameObject created = new GameObject(name);
-            created.transform.SetParent(transform, false);
-            ControllerRayPointer pointer = created.AddComponent<ControllerRayPointer>();
-            pointer.Configure(hand, anchor);
-            pointer.MaxDistance = CanvasDistanceMeters + 6f;
-            return pointer;
+            OvrUiInput input = gameObject.AddComponent<OvrUiInput>();
+            input.Configure(canvas, ResolveEyeCamera(), leftAnchor, rightAnchor);
         }
 
         private Transform ResolveEyeAnchor()
@@ -218,7 +196,7 @@ namespace Schlusselbild.App
                 return camera.transform;
             }
 
-            OVRCameraRig rig = FindFirstObjectByType<OVRCameraRig>();
+            OVRCameraRig rig = FindAnyObjectByType<OVRCameraRig>();
             return rig == null ? null : rig.centerEyeAnchor;
         }
 
@@ -229,7 +207,7 @@ namespace Schlusselbild.App
                 return eyeCamera;
             }
 
-            OVRCameraRig rig = FindFirstObjectByType<OVRCameraRig>();
+            OVRCameraRig rig = FindAnyObjectByType<OVRCameraRig>();
             if (rig != null)
             {
                 if (rig.centerEyeAnchor != null)

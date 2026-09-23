@@ -22,7 +22,10 @@ namespace Schlusselbild.Ui
     {
         public Color Background;
         public Color Panel;
+        public Color PanelRaised;
+        public Color Border;
         public Color Text;
+        public Color Muted;
         public Color Accent;
         public Color Success;
         public Color Warning;
@@ -34,6 +37,11 @@ namespace Schlusselbild.Ui
         public const float PixelsPerMeter = 1000f;
         public const float MinComfortableAngularSizeDegrees = 1.4f;
         public const float MinimumTextContrastRatio = 4.5f;
+
+        public const int CardRadius = 44;
+        public const int ButtonRadius = 26;
+        public const int FieldRadius = 18;
+        public const int BorderThickness = 2;
 
         public const string OkIcon = "\u2022";
         public const string InvalidIcon = "\u00d7";
@@ -51,24 +59,30 @@ namespace Schlusselbild.Ui
 
         private static readonly UiPalette DefaultPaletteValue = new UiPalette
         {
-            Background = Rgb(0x10, 0x15, 0x1B),
-            Panel = Rgb(0x1B, 0x24, 0x30),
-            Text = Rgb(0xF3, 0xF6, 0xFA),
-            Accent = Rgb(0x4F, 0xA3, 0xFF),
-            Success = Rgb(0x4A, 0xDE, 0x80),
-            Warning = Rgb(0xFB, 0xBF, 0x24),
-            Error = Rgb(0xF8, 0x71, 0x71)
+            Background = Rgb(0x0A, 0x0D, 0x12),
+            Panel = Rgb(0x13, 0x18, 0x21),
+            PanelRaised = Rgb(0x1B, 0x22, 0x2E),
+            Border = Rgb(0x2C, 0x38, 0x47),
+            Text = Rgb(0xEC, 0xF1, 0xF8),
+            Muted = Rgb(0x92, 0xA0, 0xB2),
+            Accent = Rgb(0x4F, 0x9C, 0xFF),
+            Success = Rgb(0x3D, 0xD6, 0x8C),
+            Warning = Rgb(0xF5, 0xB5, 0x4A),
+            Error = Rgb(0xF2, 0x6D, 0x6D)
         };
 
         private static readonly UiPalette ColorblindPaletteValue = new UiPalette
         {
-            Background = Rgb(0x10, 0x15, 0x1B),
-            Panel = Rgb(0x1B, 0x24, 0x30),
-            Text = Rgb(0xF3, 0xF6, 0xFA),
-            Accent = Rgb(0x4F, 0xA3, 0xFF),
+            Background = Rgb(0x0A, 0x0D, 0x12),
+            Panel = Rgb(0x13, 0x18, 0x21),
+            PanelRaised = Rgb(0x1B, 0x22, 0x2E),
+            Border = Rgb(0x2C, 0x38, 0x47),
+            Text = Rgb(0xEC, 0xF1, 0xF8),
+            Muted = Rgb(0x92, 0xA0, 0xB2),
+            Accent = Rgb(0x4F, 0x9C, 0xFF),
             Success = Rgb(0x58, 0xA6, 0xFF),
-            Warning = Rgb(0xD0, 0xD7, 0xE2),
-            Error = Rgb(0xFF, 0x8A, 0x3D)
+            Warning = Rgb(0xC9, 0xD2, 0xDE),
+            Error = Rgb(0xFF, 0x9A, 0x3D)
         };
 
         private static TMP_FontAsset fontAsset;

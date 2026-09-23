@@ -51,7 +51,7 @@ namespace Schlusselbild.Capture
 
             if (cameraAccess == null)
             {
-                cameraAccess = UnityEngine.Object.FindFirstObjectByType<Meta.XR.PassthroughCameraAccess>(
+                cameraAccess = UnityEngine.Object.FindAnyObjectByType<Meta.XR.PassthroughCameraAccess>(
                     FindObjectsInactive.Include);
             }
 

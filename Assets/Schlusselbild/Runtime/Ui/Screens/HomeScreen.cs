@@ -124,11 +124,11 @@ namespace Schlusselbild.Ui.Screens
 
             RectTransform keyRow = AddRow(body, "KeyRow", UiFactory.ButtonHeight, UiFactory.Gap);
             keyStatus = UiFactory.Label(keyRow, "KeyStatus", string.Empty, UiTheme.BodyFontSize, TextAlignmentOptions.MidlineLeft, UiTheme.Palette.Text);
-            UiFactory.SetFlexible((RectTransform)keyStatus.transform, 2.4f, 1f);
+            UiFactory.SetFlexible((RectTransform)keyStatus.transform, 1f, 1f);
             keyStatus.overflowMode = TextOverflowModes.Ellipsis;
 
             UiButtonHandle enterKey = UiFactory.CreateButton(keyRow, "EnterKey", "Enter key", RaiseEnterKey, UiTheme.BodyFontSize);
-            UiFactory.SetFlexible(enterKey.Rect, 1.2f, 1f);
+            UiFactory.SetPreferredWidth(enterKey.Rect, 320f);
 
             RectTransform optionsRow = AddRow(body, "OptionsRow", UiFactory.ButtonHeight, UiFactory.Gap);
             UiButtonHandle settings = UiFactory.CreateButton(optionsRow, "Settings", "Settings", RaiseSettings, UiTheme.BodyFontSize);

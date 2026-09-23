@@ -58,11 +58,11 @@ namespace Schlusselbild.Ui
 
     public static class UiFactory
     {
-        public const float ButtonHeight = 84f;
-        public const float ToggleHeight = 72f;
-        public const float SliderHeight = 72f;
-        public const float Pad = 28f;
-        public const float Gap = 18f;
+        public const float ButtonHeight = 96f;
+        public const float ToggleHeight = 80f;
+        public const float SliderHeight = 80f;
+        public const float Pad = 44f;
+        public const float Gap = 26f;
 
         public static GameObject CreateObject(string name, Transform parent)
         {
@@ -121,10 +121,76 @@ namespace Schlusselbild.Ui
             return element;
         }
 
+        public static LayoutElement SetPreferredWidth(RectTransform rect, float width)
+        {
+            LayoutElement element = rect.GetComponent<LayoutElement>();
+            if (element == null)
+            {
+                element = rect.gameObject.AddComponent<LayoutElement>();
+            }
+
+            element.minWidth = width;
+            element.preferredWidth = width;
+            element.flexibleWidth = 0f;
+            return element;
+        }
+
         public static RectTransform Panel(Transform parent, string name, Color color, bool raycastTarget)
+        {
+            return Panel(parent, name, color, raycastTarget, UiTheme.CardRadius, true);
+        }
+
+        public static RectTransform Panel(Transform parent, string name, Color color, bool raycastTarget, int radius, bool border)
+        {
+            RectTransform rect = CreateRect(name, parent);
+
+            if (radius <= 0)
+            {
+                Image flat = rect.gameObject.AddComponent<Image>();
+                flat.color = color;
+                flat.raycastTarget = raycastTarget;
+                return rect;
+            }
+
+            if (border)
+            {
+                if (radius >= 32)
+                {
+                    RectTransform shadowRect = CreateRect(name + "Shadow", rect);
+                    shadowRect.anchorMin = Vector2.zero;
+                    shadowRect.anchorMax = Vector2.one;
+                    shadowRect.pivot = new Vector2(0.5f, 0.5f);
+                    shadowRect.offsetMin = new Vector2(-4f, -12f);
+                    shadowRect.offsetMax = new Vector2(4f, 6f);
+                    Image shadow = shadowRect.gameObject.AddComponent<Image>();
+                    UiSprites.ApplyRounded(shadow, radius, true);
+                    shadow.color = new Color(0f, 0f, 0f, 0.35f);
+                    shadow.raycastTarget = false;
+                }
+
+                RectTransform strokeRect = CreateRect(name + "Border", rect);
+                Stretch(strokeRect, 0f, 0f, 0f, 0f);
+                Image stroke = strokeRect.gameObject.AddComponent<Image>();
+                UiSprites.ApplyStroke(stroke, radius, UiTheme.BorderThickness);
+                stroke.color = UiTheme.Palette.Border;
+            }
+
+            RectTransform surfaceRect = CreateRect(name + "Surface", rect);
+            float inset = border ? UiTheme.BorderThickness : 0f;
+            Stretch(surfaceRect, inset, inset, inset, inset);
+            Image surface = surfaceRect.gameObject.AddComponent<Image>();
+            UiSprites.ApplyRounded(surface, Mathf.Max(2, radius - (int)inset), true);
+            surface.color = color;
+            surface.raycastTarget = raycastTarget;
+
+            return rect;
+        }
+
+        public static RectTransform Surface(Transform parent, string name, Color color, int radius, bool raycastTarget)
         {
             RectTransform rect = CreateRect(name, parent);
             Image image = rect.gameObject.AddComponent<Image>();
+            UiSprites.ApplyRounded(image, radius, true);
             image.color = color;
             image.raycastTarget = raycastTarget;
             return rect;
@@ -168,7 +234,7 @@ namespace Schlusselbild.Ui
             label.alignment = alignment;
             label.color = color;
             label.raycastTarget = false;
-            label.richText = false;
+            label.richText = true;
             label.textWrappingMode = TextWrappingModes.Normal;
             label.overflowMode = TextOverflowModes.Overflow;
             return label;
@@ -182,7 +248,7 @@ namespace Schlusselbild.Ui
         public static UiButtonHandle CreateButton(Transform parent, string name, string text, Action onClick, float fontSize, bool emphasized)
         {
             UiPalette palette = UiTheme.Palette;
-            Color fill = emphasized ? palette.Accent : palette.Panel;
+            Color fill = emphasized ? palette.Accent : palette.PanelRaised;
             Color labelColor = emphasized ? palette.Background : palette.Text;
 
             RectTransform rect = CreateRect(name, parent);
@@ -190,20 +256,27 @@ namespace Schlusselbild.Ui
             SetPreferredHeight(rect, ButtonHeight);
 
             Image background = rect.gameObject.AddComponent<Image>();
+            UiSprites.ApplyRounded(background, UiTheme.ButtonRadius, true);
             background.color = fill;
             background.raycastTarget = true;
+
+            if (!emphasized)
+            {
+                RectTransform border = Surface(rect, name + "Border", palette.Border, UiTheme.ButtonRadius, false);
+                Stretch(border, 0f, 0f, 0f, 0f);
+            }
 
             Button button = rect.gameObject.AddComponent<Button>();
             button.targetGraphic = background;
 
             ColorBlock colors = button.colors;
             colors.normalColor = Color.white;
-            colors.highlightedColor = new Color(1.6f, 1.6f, 1.6f, 1f);
-            colors.pressedColor = new Color(2.4f, 2.4f, 2.4f, 1f);
-            colors.selectedColor = new Color(1.25f, 1.25f, 1.25f, 1f);
-            colors.disabledColor = new Color(0.4f, 0.4f, 0.4f, 1f);
+            colors.highlightedColor = new Color(1.12f, 1.12f, 1.12f, 1f);
+            colors.pressedColor = new Color(0.86f, 0.86f, 0.86f, 1f);
+            colors.selectedColor = new Color(1.06f, 1.06f, 1.06f, 1f);
+            colors.disabledColor = new Color(1f, 1f, 1f, 0.35f);
             colors.colorMultiplier = 1f;
-            colors.fadeDuration = 0.06f;
+            colors.fadeDuration = 0.08f;
             button.colors = colors;
 
             if (onClick != null)
@@ -212,7 +285,7 @@ namespace Schlusselbild.Ui
             }
 
             TextMeshProUGUI label = Label(rect, name + "Label", text, fontSize, TextAlignmentOptions.Center, labelColor);
-            Stretch((RectTransform)label.transform, 14f, 14f, 6f, 6f);
+            Stretch((RectTransform)label.transform, 18f, 18f, 8f, 8f);
             label.overflowMode = TextOverflowModes.Ellipsis;
 
             return new UiButtonHandle(button, background, label);
@@ -221,20 +294,20 @@ namespace Schlusselbild.Ui
         public static Slider CreateSlider(Transform parent, string name, float min, float max, float value, Action<float> onValueChanged)
         {
             UiPalette palette = UiTheme.Palette;
-            float trackHeight = 14f;
+            float trackHeight = 16f;
             float inset = trackHeight * 0.5f;
 
             RectTransform rect = CreateRect(name, parent);
             rect.sizeDelta = new Vector2(0f, SliderHeight);
             SetPreferredHeight(rect, SliderHeight);
 
-            RectTransform background = Panel(rect, name + "Background", UiTheme.Mix(palette.Panel, palette.Text, 0.25f), true);
+            RectTransform background = Surface(rect, name + "Background", UiTheme.Mix(palette.Panel, palette.Text, 0.22f), 8, true);
             Stretch(background, 0f, 0f, (SliderHeight - trackHeight) * 0.5f, (SliderHeight - trackHeight) * 0.5f);
 
             RectTransform fillArea = CreateRect(name + "FillArea", rect);
             Stretch(fillArea, inset, inset, (SliderHeight - trackHeight) * 0.5f, (SliderHeight - trackHeight) * 0.5f);
 
-            RectTransform fill = Panel(fillArea, name + "Fill", palette.Accent, false);
+            RectTransform fill = Surface(fillArea, name + "Fill", palette.Accent, 8, false);
             fill.anchorMin = new Vector2(0f, 0f);
             fill.anchorMax = new Vector2(0f, 1f);
             fill.pivot = new Vector2(0f, 0.5f);
@@ -245,12 +318,12 @@ namespace Schlusselbild.Ui
             RectTransform handleArea = CreateRect(name + "HandleArea", rect);
             Stretch(handleArea, inset, inset, 0f, 0f);
 
-            RectTransform handle = Panel(handleArea, name + "Handle", palette.Accent, true);
+            RectTransform handle = Surface(handleArea, name + "Handle", palette.Text, 20, true);
             handle.anchorMin = new Vector2(0f, 0.5f);
             handle.anchorMax = new Vector2(0f, 0.5f);
             handle.pivot = new Vector2(0.5f, 0.5f);
             handle.anchoredPosition = Vector2.zero;
-            handle.sizeDelta = new Vector2(44f, 44f);
+            handle.sizeDelta = new Vector2(46f, 46f);
 
             Slider slider = rect.gameObject.AddComponent<Slider>();
             slider.fillRect = fill;
@@ -278,15 +351,15 @@ namespace Schlusselbild.Ui
             rect.sizeDelta = new Vector2(0f, ToggleHeight);
             SetPreferredHeight(rect, ToggleHeight);
 
-            RectTransform box = Panel(rect, name + "Box", UiTheme.Mix(palette.Panel, palette.Text, 0.2f), true);
+            RectTransform box = Surface(rect, name + "Box", UiTheme.Mix(palette.Panel, palette.Text, 0.16f), 12, true);
             box.anchorMin = new Vector2(0f, 0.5f);
             box.anchorMax = new Vector2(0f, 0.5f);
             box.pivot = new Vector2(0f, 0.5f);
             box.anchoredPosition = Vector2.zero;
-            box.sizeDelta = new Vector2(48f, 48f);
+            box.sizeDelta = new Vector2(52f, 52f);
 
-            RectTransform check = Panel(box, name + "Check", palette.Accent, false);
-            Stretch(check, 11f, 11f, 11f, 11f);
+            RectTransform check = Surface(box, name + "Check", palette.Accent, 8, false);
+            Stretch(check, 12f, 12f, 12f, 12f);
 
             Toggle toggle = rect.gameObject.AddComponent<Toggle>();
             toggle.targetGraphic = box.GetComponent<Image>();
@@ -299,7 +372,7 @@ namespace Schlusselbild.Ui
             labelRect.anchorMin = new Vector2(0f, 0f);
             labelRect.anchorMax = new Vector2(1f, 1f);
             labelRect.pivot = new Vector2(0.5f, 0.5f);
-            labelRect.offsetMin = new Vector2(72f, 0f);
+            labelRect.offsetMin = new Vector2(80f, 0f);
             labelRect.offsetMax = new Vector2(0f, 0f);
             label.overflowMode = TextOverflowModes.Ellipsis;
 
@@ -317,10 +390,10 @@ namespace Schlusselbild.Ui
 
             RectTransform root = Panel(parent, name, palette.Background, true);
             SetFlexible(root, 1f, 1f);
-            root.gameObject.AddComponent<RectMask2D>();
 
             RectTransform viewport = CreateRect(name + "Viewport", root);
-            Stretch(viewport, 0f, 0f, 0f, 0f);
+            Stretch(viewport, 6f, 6f, 6f, 6f);
+            viewport.gameObject.AddComponent<RectMask2D>();
 
             content = CreateRect(name + "Content", viewport);
             content.anchorMin = new Vector2(0f, 1f);

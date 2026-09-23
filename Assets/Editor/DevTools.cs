@@ -1,9 +1,11 @@
 using System.IO;
+using Schlusselbild.App;
 using Schlusselbild.Page;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public static class DevTools
 {
@@ -12,12 +14,12 @@ public static class DevTools
     {
         PlayerSettings.companyName = "Schlusselbild";
         PlayerSettings.productName = "Schlusselbild";
-        PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Android, "com.schlusselbild.quest");
-        PlayerSettings.bundleVersion = "0.3.0";
-        PlayerSettings.Android.bundleVersionCode = 3;
+        PlayerSettings.SetApplicationIdentifier(NamedBuildTarget.Android, "com.schlusselbild.quest");
+        PlayerSettings.bundleVersion = "0.5.0";
+        PlayerSettings.Android.bundleVersionCode = 5;
         PlayerSettings.Android.minSdkVersion = AndroidSdkVersions.AndroidApiLevel32;
         PlayerSettings.Android.targetSdkVersion = AndroidSdkVersions.AndroidApiLevelAuto;
-        PlayerSettings.SetScriptingBackend(BuildTargetGroup.Android, ScriptingImplementation.IL2CPP);
+        PlayerSettings.SetScriptingBackend(NamedBuildTarget.Android, ScriptingImplementation.IL2CPP);
         PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
         PlayerSettings.colorSpace = ColorSpace.Linear;
 
@@ -71,5 +73,107 @@ public static class DevTools
         File.WriteAllBytes(Path.Combine(dir, "quest_export_page.png"), png);
         File.WriteAllText(Path.Combine(dir, "quest_export_secret.txt"), secret);
         Debug.Log("[DevTools] exported interop page to " + dir);
+    }
+
+    [MenuItem("Schlusselbild/Dev/Capture Game View")]
+    public static void CaptureGameView()
+    {
+        string dir = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "Logs"));
+        Directory.CreateDirectory(dir);
+        string path = Path.Combine(dir, "quest_ui.png");
+
+        Canvas canvas = Object.FindAnyObjectByType<Canvas>();
+        Camera cam = canvas != null && canvas.worldCamera != null ? canvas.worldCamera : Camera.main;
+        if (cam == null)
+        {
+            Debug.LogError("[DevTools] no camera available for capture");
+            return;
+        }
+
+        int w = 1240;
+        int h = 940;
+        RenderTexture rt = RenderTexture.GetTemporary(w, h, 24);
+        RenderTexture prevActive = RenderTexture.active;
+        RenderTexture prevTarget = cam.targetTexture;
+        cam.targetTexture = rt;
+        cam.Render();
+        cam.targetTexture = prevTarget;
+        RenderTexture.active = rt;
+
+        Texture2D tex = new Texture2D(w, h, TextureFormat.RGBA32, false);
+        tex.ReadPixels(new Rect(0, 0, w, h), 0, 0);
+        tex.Apply();
+
+        RenderTexture.active = prevActive;
+        RenderTexture.ReleaseTemporary(rt);
+
+        File.WriteAllBytes(path, tex.EncodeToPNG());
+        Object.DestroyImmediate(tex);
+        Debug.Log("[DevTools] wrote " + path);
+    }
+
+    [MenuItem("Schlusselbild/Dev/Capture All Screens")]
+    public static void CaptureAllScreens()
+    {
+        UiBootstrap boot = Object.FindAnyObjectByType<UiBootstrap>();
+        if (boot == null || boot.Controller == null)
+        {
+            Debug.LogError("[DevTools] no UiBootstrap/AppController in the scene");
+            return;
+        }
+
+        AppController controller = boot.Controller;
+        controller.ShowHome();
+        CaptureCanvas("home");
+        controller.ShowCreate();
+        CaptureCanvas("create");
+        controller.ShowScan();
+        CaptureCanvas("scan");
+        controller.ShowDecoded("meet at dawn - 0400 pier 7");
+        CaptureCanvas("decoded");
+        controller.ShowSettings();
+        CaptureCanvas("settings");
+        controller.ShowHome();
+        Debug.Log("[DevTools] captured all screens");
+    }
+
+    private static void CaptureCanvas(string name)
+    {
+        Canvas canvas = Object.FindAnyObjectByType<Canvas>();
+        Camera cam = canvas != null && canvas.worldCamera != null ? canvas.worldCamera : Camera.main;
+        if (cam == null)
+        {
+            Debug.LogError("[DevTools] no camera available for capture");
+            return;
+        }
+
+        if (canvas != null)
+        {
+            LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)canvas.transform);
+            Canvas.ForceUpdateCanvases();
+        }
+
+        int w = 1240;
+        int h = 940;
+        RenderTexture rt = RenderTexture.GetTemporary(w, h, 24);
+        RenderTexture prevActive = RenderTexture.active;
+        RenderTexture prevTarget = cam.targetTexture;
+        cam.targetTexture = rt;
+        cam.Render();
+        cam.targetTexture = prevTarget;
+        RenderTexture.active = rt;
+
+        Texture2D tex = new Texture2D(w, h, TextureFormat.RGBA32, false);
+        tex.ReadPixels(new Rect(0, 0, w, h), 0, 0);
+        tex.Apply();
+
+        RenderTexture.active = prevActive;
+        RenderTexture.ReleaseTemporary(rt);
+
+        string dir = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "Logs"));
+        Directory.CreateDirectory(dir);
+        File.WriteAllBytes(Path.Combine(dir, "ui_" + name + ".png"), tex.EncodeToPNG());
+        Object.DestroyImmediate(tex);
+        Debug.Log("[DevTools] captured " + name);
     }
 }

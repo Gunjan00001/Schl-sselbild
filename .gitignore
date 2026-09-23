@@ -60,6 +60,8 @@ key.bin
 
 # graphify working directory (generated artefacts live in docs/graph/)
 /graphify-out/
+**/graphify-out/
+**/graphify-out.meta
 
 # ── Legacy Python reference ──────────────────────────────────────────────────
 legacy/python/.venv/

@@ -15,8 +15,8 @@ public static class DevTools
         PlayerSettings.companyName = "Schlusselbild";
         PlayerSettings.productName = "Schlusselbild";
         PlayerSettings.SetApplicationIdentifier(NamedBuildTarget.Android, "com.schlusselbild.quest");
-        PlayerSettings.bundleVersion = "0.6.1";
-        PlayerSettings.Android.bundleVersionCode = 7;
+        PlayerSettings.bundleVersion = "0.6.2";
+        PlayerSettings.Android.bundleVersionCode = 8;
         PlayerSettings.Android.minSdkVersion = AndroidSdkVersions.AndroidApiLevel32;
         PlayerSettings.Android.targetSdkVersion = AndroidSdkVersions.AndroidApiLevelAuto;
         PlayerSettings.SetScriptingBackend(NamedBuildTarget.Android, ScriptingImplementation.IL2CPP);

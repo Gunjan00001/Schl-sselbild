@@ -392,7 +392,7 @@ namespace Schlusselbild.Ui
             SetFlexible(root, 1f, 1f);
 
             RectTransform viewport = CreateRect(name + "Viewport", root);
-            Stretch(viewport, 6f, 6f, 6f, 6f);
+            Stretch(viewport, 8f, 34f, 8f, 8f);
             viewport.gameObject.AddComponent<RectMask2D>();
 
             content = CreateRect(name + "Content", viewport);
@@ -426,6 +426,27 @@ namespace Schlusselbild.Ui
             scroll.movementType = ScrollRect.MovementType.Clamped;
             scroll.scrollSensitivity = 40f;
             scroll.inertia = true;
+
+            RectTransform track = Surface(root, name + "Scrollbar", UiTheme.Mix(palette.Background, palette.Border, 0.7f), 8, false);
+            track.anchorMin = new Vector2(1f, 0f);
+            track.anchorMax = new Vector2(1f, 1f);
+            track.pivot = new Vector2(1f, 0.5f);
+            track.offsetMin = new Vector2(-24f, 12f);
+            track.offsetMax = new Vector2(-12f, -12f);
+
+            RectTransform handle = Surface(track, name + "Handle", UiTheme.Mix(palette.Panel, palette.Text, 0.4f), 8, true);
+            handle.anchorMin = Vector2.zero;
+            handle.anchorMax = Vector2.one;
+            handle.offsetMin = Vector2.zero;
+            handle.offsetMax = Vector2.zero;
+
+            Scrollbar scrollbar = track.gameObject.AddComponent<Scrollbar>();
+            scrollbar.handleRect = handle;
+            scrollbar.targetGraphic = handle.GetComponent<Image>();
+            scrollbar.direction = Scrollbar.Direction.BottomToTop;
+
+            scroll.verticalScrollbar = scrollbar;
+            scroll.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.Permanent;
 
             return scroll;
         }

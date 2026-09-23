@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -7,6 +8,8 @@ namespace Schlusselbild.Ui.Screens
     public abstract class ScreenBase : MonoBehaviour
     {
         private RectTransform root;
+        private CanvasGroup canvasGroup;
+        private Coroutine fadeRoutine;
 
         public RectTransform Root
         {
@@ -22,18 +25,26 @@ namespace Schlusselbild.Ui.Screens
         {
             root = UiFactory.CreateRect(name, parent);
             UiFactory.Stretch(root, 0f, 0f, 0f, 0f);
+            canvasGroup = root.gameObject.AddComponent<CanvasGroup>();
             return root;
         }
 
         protected RectTransform BuildBody(string title)
         {
-            RectTransform body = UiFactory.VerticalLayout(root, "Body", UiFactory.Gap, new RectOffset(40, 40, 32, 32));
+            RectTransform body = UiFactory.VerticalLayout(root, "Body", UiFactory.Gap, new RectOffset(44, 44, 36, 36));
             UiFactory.Stretch(body, 0f, 0f, 0f, 0f);
 
             if (!string.IsNullOrEmpty(title))
             {
                 TextMeshProUGUI titleLabel = UiFactory.Label(body, "Title", title, UiTheme.TitleFontSize, TextAlignmentOptions.Center, UiTheme.Palette.Text);
-                UiFactory.SetPreferredHeight((RectTransform)titleLabel.transform, UiTheme.TitleFontSize * 1.45f);
+                UiFactory.SetPreferredHeight((RectTransform)titleLabel.transform, UiTheme.TitleFontSize * 1.5f);
+
+                RectTransform underline = UiFactory.Surface((RectTransform)titleLabel.transform, "TitleAccent", UiTheme.Palette.Accent, 3, false);
+                underline.anchorMin = new Vector2(0.5f, 0f);
+                underline.anchorMax = new Vector2(0.5f, 0f);
+                underline.pivot = new Vector2(0.5f, 1f);
+                underline.anchoredPosition = new Vector2(0f, -6f);
+                underline.sizeDelta = new Vector2(132f, 6f);
             }
 
             return body;
@@ -70,6 +81,16 @@ namespace Schlusselbild.Ui.Screens
 
             root.gameObject.SetActive(true);
             OnShown();
+
+            if (canvasGroup != null && isActiveAndEnabled)
+            {
+                if (fadeRoutine != null)
+                {
+                    StopCoroutine(fadeRoutine);
+                }
+
+                fadeRoutine = StartCoroutine(FadeIn());
+            }
         }
 
         public virtual void Hide()
@@ -79,8 +100,38 @@ namespace Schlusselbild.Ui.Screens
                 return;
             }
 
+            if (fadeRoutine != null)
+            {
+                StopCoroutine(fadeRoutine);
+                fadeRoutine = null;
+            }
+
+            if (canvasGroup != null)
+            {
+                canvasGroup.alpha = 1f;
+            }
+
             root.gameObject.SetActive(false);
             OnHidden();
+        }
+
+        private IEnumerator FadeIn()
+        {
+            const float duration = 0.16f;
+            float elapsed = 0f;
+            canvasGroup.alpha = 0f;
+
+            while (elapsed < duration)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                canvasGroup.alpha = Mathf.Clamp01(elapsed / duration);
+                root.localScale = Vector3.one * Mathf.Lerp(0.985f, 1f, canvasGroup.alpha);
+                yield return null;
+            }
+
+            canvasGroup.alpha = 1f;
+            root.localScale = Vector3.one;
+            fadeRoutine = null;
         }
 
         public virtual void Teardown()

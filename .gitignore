@@ -58,6 +58,9 @@ key.bin
 /Meta/
 *.msi
 
+# graphify working directory (generated artefacts live in docs/graph/)
+/graphify-out/
+
 # ── Legacy Python reference ──────────────────────────────────────────────────
 legacy/python/.venv/
 legacy/python/**/__pycache__/

@@ -58,6 +58,17 @@ Controllers **and** hand tracking for every action, comfort/motion options
 (seated/standing, snap turn, adjustable UI distance), and vision options
 (S/M/L text scaling, WCAG-AA contrast, colorblind-safe status states).
 
+## Documentation
+
+Detailed docs live in [`docs/`](docs/):
+
+- [`DECISIONS.md`](docs/DECISIONS.md) — every design decision with its reason (D1–D20).
+- [`ARCHITECTURE.md`](docs/ARCHITECTURE.md) — layers, data flow, file map, runtime wiring.
+- [`UI-DESIGN.md`](docs/UI-DESIGN.md) — design tokens, components, screens, accessibility.
+- [`BUILD-AND-DEPLOY.md`](docs/BUILD-AND-DEPLOY.md) — setup, Editor/Simulator, Android build, adb.
+- [`TESTING.md`](docs/TESTING.md) — test strategy, coverage, device-only gaps.
+- [`docs/graph/graph.html`](docs/graph/graph.html) — generated knowledge graph of the codebase.
+
 ## Versioning
 
 See [`rules.md`](rules.md). Every update is tagged `major.minor.bugs`.

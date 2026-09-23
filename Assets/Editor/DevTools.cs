@@ -15,8 +15,8 @@ public static class DevTools
         PlayerSettings.companyName = "Schlusselbild";
         PlayerSettings.productName = "Schlusselbild";
         PlayerSettings.SetApplicationIdentifier(NamedBuildTarget.Android, "com.schlusselbild.quest");
-        PlayerSettings.bundleVersion = "0.5.0";
-        PlayerSettings.Android.bundleVersionCode = 5;
+        PlayerSettings.bundleVersion = "0.6.0";
+        PlayerSettings.Android.bundleVersionCode = 6;
         PlayerSettings.Android.minSdkVersion = AndroidSdkVersions.AndroidApiLevel32;
         PlayerSettings.Android.targetSdkVersion = AndroidSdkVersions.AndroidApiLevelAuto;
         PlayerSettings.SetScriptingBackend(NamedBuildTarget.Android, ScriptingImplementation.IL2CPP);
@@ -149,6 +149,21 @@ public static class DevTools
 
         if (canvas != null)
         {
+            CanvasGroup[] groups = canvas.GetComponentsInChildren<CanvasGroup>(true);
+            for (int i = 0; i < groups.Length; i++)
+            {
+                groups[i].alpha = 1f;
+            }
+
+            Transform screens = canvas.transform.Find("Screens");
+            if (screens != null)
+            {
+                for (int i = 0; i < screens.childCount; i++)
+                {
+                    screens.GetChild(i).localScale = Vector3.one;
+                }
+            }
+
             LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)canvas.transform);
             Canvas.ForceUpdateCanvases();
         }

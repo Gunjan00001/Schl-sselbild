@@ -59,8 +59,8 @@ namespace Schlusselbild.Ui.Screens
             previewFitter.aspectRatio = 0.71f;
             preview.enabled = false;
 
-            previewHint = UiFactory.Label(previewPanel, "PreviewHint", "Preview", UiTheme.CaptionFontSize, TextAlignmentOptions.Bottom, UiTheme.WithAlpha(palette.Text, 0.75f));
-            UiFactory.Stretch((RectTransform)previewHint.transform, 12f, 12f, 0f, 0f);
+            previewHint = UiFactory.Label(previewPanel, "PreviewHint", "QR page preview", UiTheme.BodyFontSize, TextAlignmentOptions.Center, UiTheme.WithAlpha(palette.Text, 0.5f));
+            UiFactory.Stretch((RectTransform)previewHint.transform, 16f, 16f, 16f, 16f);
 
             keypad = Keypad.Create(body, KeypadModel.DefaultMaxLength);
             keypad.TextChanged += HandleSecretChanged;

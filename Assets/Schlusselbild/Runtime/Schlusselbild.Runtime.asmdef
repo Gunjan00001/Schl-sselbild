@@ -1,0 +1,19 @@
+{
+    "name": "Schlusselbild.Runtime",
+    "rootNamespace": "Schlusselbild",
+    "references": [
+        "meta.xr.mrutilitykit",
+        "Oculus.VR",
+        "UnityEngine.UI",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

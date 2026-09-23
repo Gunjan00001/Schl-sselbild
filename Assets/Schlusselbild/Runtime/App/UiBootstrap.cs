@@ -186,6 +186,12 @@ namespace Schlusselbild.App
 
             OvrUiInput input = gameObject.AddComponent<OvrUiInput>();
             input.Configure(canvas, ResolveEyeCamera(), leftAnchor, rightAnchor);
+
+            if (Application.isEditor)
+            {
+                MouseUiInput mouse = gameObject.AddComponent<MouseUiInput>();
+                mouse.Configure(canvas);
+            }
         }
 
         private Transform ResolveEyeAnchor()

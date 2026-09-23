@@ -10,8 +10,18 @@ This is a college / proof-of-concept project, **not** a production security prod
 
 ## Status
 
-Early port. The original Python implementation (Kitsune) is preserved under
+**0.6.1** — feature-complete for the MVP scope, verified in the Editor and building a Quest 3 APK.
+
+- **Encode:** type a secret (in-world keypad) → AES-256-GCM → segmented QR page, viewable and exportable as PNG.
+- **Scan:** point the passthrough camera at a page → decode every QR → decrypt → show the plaintext.
+- **UI:** five screens (Home, Create, Scan, Decoded, Settings) with a premium rounded theme and accessibility options.
+- **Tests:** 111/111 EditMode tests, byte-compatible with the Python oracle in both directions.
+
+The original Python implementation (Kitsune) is preserved under
 [`legacy/python/`](legacy/python/) as the reference implementation and test oracle.
+
+Still needs hardware to confirm: real passthrough scanning and controller clicks (see
+[`docs/TESTING.md`](docs/TESTING.md)).
 
 ## Target device — Meta Quest 3
 
@@ -48,15 +58,36 @@ Schl-sselbild/
 ## Toolchain
 
 - Unity 6 LTS (6000.6.2f1) + Meta XR SDK + Mixed Reality Utility Kit (MRUK)
-- All-managed C#: `System.Security.Cryptography.AesGcm` + ZXing.Net (behind `IQrDecoder`)
+- All-managed C#: pure-managed AES-256-GCM (`ManagedGcm`) + ZXing.Net (behind `IQrDecoder`)
+- Input: Meta `OVRInputModule` + `OVRRaycaster` (controllers/hands); Editor mouse handler
 - Unity MCP (`com.gamelovers.mcp-unity`) for Editor automation
 - mcode (MiniMax Code, DeepSeek V4.1 Flash) for delegated implementation
+
+## Screens
+
+| Screen | Purpose |
+|--------|---------|
+| **Home** | Create page / Scan page, key status, Settings, Help. |
+| **Create** | Secret entry (keypad), compose/preview, Export PNG, Self-test. |
+| **Scan** | Passthrough retry loop; shows status and a live preview. |
+| **Decoded** | The recovered plaintext, with Clear. |
+| **Settings** | Text size S/M/L, UI distance, seated mode, snap turn, colorblind-safe. |
+
+## Controls and input
+
+- **Headset:** `OVRInputModule` + `OVRRaycaster` drive the UI from the Quest Touch Plus
+  controllers or hand tracking; the pointing hand's ray is highlighted. Trigger = click.
+- **Editor:** a dedicated mouse handler (`MouseUiInput`) with its own `GraphicRaycaster`
+  lets you click the UI with the mouse. Use **Meta → Meta XR Simulator → Activate** to test
+  controller input without a headset.
+- Settings are persisted (`PlayerPrefs`) and applied live.
 
 ## Accessibility
 
 Controllers **and** hand tracking for every action, comfort/motion options
 (seated/standing, snap turn, adjustable UI distance), and vision options
-(S/M/L text scaling, WCAG-AA contrast, colorblind-safe status states).
+(S/M/L text scaling, WCAG-AA contrast, colorblind-safe status states). Status is always
+shown as **icon + word + colour**, never colour alone.
 
 ## Documentation
 

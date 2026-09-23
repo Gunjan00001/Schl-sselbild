@@ -68,11 +68,11 @@ namespace Schlusselbild.Ui
             }
 
             Transform chosen = ChooseAnchor();
-            module.rayTransform = chosen != null ? chosen : transform;
+            bool hasInput = HasInput();
+            module.rayTransform = hasInput && chosen != null ? chosen : null;
 
-            bool showLines = HasInput();
-            UpdateLine(leftLine, leftAnchor, showLines && chosen != null && chosen == leftAnchor);
-            UpdateLine(rightLine, rightAnchor, showLines && chosen != null && chosen == rightAnchor);
+            UpdateLine(leftLine, leftAnchor, hasInput && chosen != null && chosen == leftAnchor);
+            UpdateLine(rightLine, rightAnchor, hasInput && chosen != null && chosen == rightAnchor);
         }
 
         private static bool HasInput()

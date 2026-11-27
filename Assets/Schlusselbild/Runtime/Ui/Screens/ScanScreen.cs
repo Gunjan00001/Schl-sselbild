@@ -23,7 +23,7 @@ namespace Schlusselbild.Ui.Screens
             BuildRoot(parent, "ScanScreen");
             RectTransform body = BuildBody("Scan page");
 
-            RectTransform banner = UiFactory.Panel(body, "StatusBanner", palette.Panel, true);
+            RectTransform banner = UiFactory.Panel(body, "StatusBanner", palette.Panel, true, 38, true);
             UiFactory.SetPreferredHeight(banner, 76f);
             statusLabel = UiFactory.Label(banner, "StatusText", string.Empty, UiTheme.BodyFontSize, TextAlignmentOptions.Center, palette.Text);
             UiFactory.Stretch((RectTransform)statusLabel.transform, 16f, 16f, 8f, 8f);

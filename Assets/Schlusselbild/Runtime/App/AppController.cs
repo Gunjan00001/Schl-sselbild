@@ -57,16 +57,6 @@ namespace Schlusselbild.App
             get { return key != null && key.Length == KeyStore.KeySize; }
         }
 
-        public bool SnapTurnEnabled
-        {
-            get { return settings != null && settings.SnapTurn; }
-        }
-
-        public PassthroughScanner Scanner
-        {
-            get { return scanner; }
-        }
-
         public void Initialize(AppSettings appSettings, RectTransform screensRoot, PassthroughScanner passthroughScanner)
         {
             settings = appSettings == null ? AppSettings.Load() : appSettings;

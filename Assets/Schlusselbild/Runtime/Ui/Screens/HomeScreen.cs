@@ -150,8 +150,6 @@ namespace Schlusselbild.Ui.Screens
     public sealed class HomeScreen : ScreenBase
     {
         private TextMeshProUGUI keyStatus;
-        private UiButtonHandle createButton;
-        private UiButtonHandle scanButton;
 
         public event Action CreateRequested;
         public event Action ScanRequested;
@@ -164,13 +162,13 @@ namespace Schlusselbild.Ui.Screens
             BuildRoot(parent, "HomeScreen");
             RectTransform body = BuildBody("Schl\u00fcsselbild");
 
-            AddCaption(body, "Subtitle", "Encrypted page on a Meta Quest 3", UiTheme.WithAlpha(UiTheme.Palette.Text, 0.8f));
+            AddCaption(body, "Subtitle", "Your secret, invisible on paper.", UiTheme.WithAlpha(UiTheme.Palette.Text, 0.8f));
             AddSpacer(body, "Spacer");
 
-            createButton = UiFactory.CreateButton(body, "Create", "Create page", RaiseCreate, UiTheme.ButtonFontSize * 1.15f, true);
+            UiButtonHandle createButton = UiFactory.CreateButton(body, "Create", "Create page", RaiseCreate, UiTheme.ButtonFontSize * 1.15f, true);
             UiFactory.SetPreferredHeight(createButton.Rect, 116f);
 
-            scanButton = UiFactory.CreateButton(body, "Scan", "Scan page", RaiseScan, UiTheme.ButtonFontSize * 1.15f, true);
+            UiButtonHandle scanButton = UiFactory.CreateButton(body, "Scan", "Scan page", RaiseScan, UiTheme.ButtonFontSize * 1.15f, true);
             UiFactory.SetPreferredHeight(scanButton.Rect, 116f);
 
             RectTransform keyRow = AddRow(body, "KeyRow", UiFactory.ButtonHeight, UiFactory.Gap);
@@ -202,19 +200,6 @@ namespace Schlusselbild.Ui.Screens
             StatusStyle style = UiTheme.ResolveStatus(loaded ? StatusKind.Ok : StatusKind.Invalid, UiTheme.ColorblindSafe);
             keyStatus.text = style.Icon + " Key " + style.Word + (string.IsNullOrEmpty(detail) ? string.Empty : " \u2014 " + detail);
             keyStatus.color = loaded ? palette.Text : style.Color;
-        }
-
-        public void SetBusy(bool busy)
-        {
-            if (createButton != null)
-            {
-                createButton.Interactable = !busy;
-            }
-
-            if (scanButton != null)
-            {
-                scanButton.Interactable = !busy;
-            }
         }
 
         private void RaiseCreate()

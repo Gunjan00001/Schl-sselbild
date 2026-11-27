@@ -18,11 +18,6 @@ namespace Schlusselbild.Ui
             this.label = label;
         }
 
-        public Button ButtonComponent
-        {
-            get { return buttonComponent; }
-        }
-
         public Image Background { get; private set; }
 
         public RectTransform Rect
@@ -160,11 +155,11 @@ namespace Schlusselbild.Ui
                     shadowRect.anchorMin = Vector2.zero;
                     shadowRect.anchorMax = Vector2.one;
                     shadowRect.pivot = new Vector2(0.5f, 0.5f);
-                    shadowRect.offsetMin = new Vector2(-4f, -12f);
-                    shadowRect.offsetMax = new Vector2(4f, 6f);
+                    shadowRect.offsetMin = new Vector2(-6f, -18f);
+                    shadowRect.offsetMax = new Vector2(6f, 10f);
                     Image shadow = shadowRect.gameObject.AddComponent<Image>();
                     UiSprites.ApplyRounded(shadow, radius, true);
-                    shadow.color = new Color(0f, 0f, 0f, 0.35f);
+                    shadow.color = new Color(0f, 0f, 0f, 0.45f);
                     shadow.raycastTarget = false;
                 }
 
@@ -182,6 +177,16 @@ namespace Schlusselbild.Ui
             UiSprites.ApplyRounded(surface, Mathf.Max(2, radius - (int)inset), true);
             surface.color = color;
             surface.raycastTarget = raycastTarget;
+
+            if (border)
+            {
+                RectTransform sheenRect = CreateRect(name + "Sheen", surfaceRect);
+                Stretch(sheenRect, 0f, 0f, 0f, 0f);
+                Image sheen = sheenRect.gameObject.AddComponent<Image>();
+                UiSprites.ApplyGradient(sheen);
+                sheen.color = new Color(1f, 1f, 1f, 0.05f);
+                sheen.raycastTarget = false;
+            }
 
             return rect;
         }
@@ -260,7 +265,16 @@ namespace Schlusselbild.Ui
             background.color = fill;
             background.raycastTarget = true;
 
-            if (!emphasized)
+            if (emphasized)
+            {
+                RectTransform sheenRect = CreateRect(name + "Sheen", rect);
+                Stretch(sheenRect, 0f, 0f, 0f, 0f);
+                Image sheen = sheenRect.gameObject.AddComponent<Image>();
+                UiSprites.ApplyGradient(sheen);
+                sheen.color = new Color(1f, 1f, 1f, 0.16f);
+                sheen.raycastTarget = false;
+            }
+            else
             {
                 RectTransform border = Surface(rect, name + "Border", palette.Border, UiTheme.ButtonRadius, false);
                 Stretch(border, 0f, 0f, 0f, 0f);

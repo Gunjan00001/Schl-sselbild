@@ -87,14 +87,6 @@ namespace Schlusselbild.Ui.Screens
             key = value;
         }
 
-        public void ResetSecret()
-        {
-            if (keypad != null)
-            {
-                keypad.Clear();
-            }
-        }
-
         private void HandleSecretChanged(string value)
         {
             if (secretLabel == null)

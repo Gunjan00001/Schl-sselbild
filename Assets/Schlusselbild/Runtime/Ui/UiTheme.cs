@@ -25,7 +25,6 @@ namespace Schlusselbild.Ui
         public Color PanelRaised;
         public Color Border;
         public Color Text;
-        public Color Muted;
         public Color Accent;
         public Color Success;
         public Color Warning;
@@ -38,9 +37,8 @@ namespace Schlusselbild.Ui
         public const float MinComfortableAngularSizeDegrees = 1.4f;
         public const float MinimumTextContrastRatio = 4.5f;
 
-        public const int CardRadius = 44;
-        public const int ButtonRadius = 26;
-        public const int FieldRadius = 18;
+        public const int CardRadius = 56;
+        public const int ButtonRadius = 40;
         public const int BorderThickness = 2;
 
         public const string OkIcon = "\u2022";
@@ -59,13 +57,12 @@ namespace Schlusselbild.Ui
 
         private static readonly UiPalette DefaultPaletteValue = new UiPalette
         {
-            Background = Rgb(0x0A, 0x0D, 0x12),
-            Panel = Rgb(0x13, 0x18, 0x21),
-            PanelRaised = Rgb(0x1B, 0x22, 0x2E),
-            Border = Rgb(0x2C, 0x38, 0x47),
-            Text = Rgb(0xEC, 0xF1, 0xF8),
-            Muted = Rgb(0x92, 0xA0, 0xB2),
-            Accent = Rgb(0x4F, 0x9C, 0xFF),
+            Background = Rgb(0x14, 0x18, 0x24),
+            Panel = Rgb(0x1C, 0x22, 0x30),
+            PanelRaised = Rgb(0x26, 0x2D, 0x3D),
+            Border = Rgb(0x36, 0x3F, 0x52),
+            Text = Rgb(0xF2, 0xF4, 0xFA),
+            Accent = Rgb(0x7A, 0x65, 0xFF),
             Success = Rgb(0x3D, 0xD6, 0x8C),
             Warning = Rgb(0xF5, 0xB5, 0x4A),
             Error = Rgb(0xF2, 0x6D, 0x6D)
@@ -73,13 +70,12 @@ namespace Schlusselbild.Ui
 
         private static readonly UiPalette ColorblindPaletteValue = new UiPalette
         {
-            Background = Rgb(0x0A, 0x0D, 0x12),
-            Panel = Rgb(0x13, 0x18, 0x21),
-            PanelRaised = Rgb(0x1B, 0x22, 0x2E),
-            Border = Rgb(0x2C, 0x38, 0x47),
-            Text = Rgb(0xEC, 0xF1, 0xF8),
-            Muted = Rgb(0x92, 0xA0, 0xB2),
-            Accent = Rgb(0x4F, 0x9C, 0xFF),
+            Background = Rgb(0x14, 0x18, 0x24),
+            Panel = Rgb(0x1C, 0x22, 0x30),
+            PanelRaised = Rgb(0x26, 0x2D, 0x3D),
+            Border = Rgb(0x36, 0x3F, 0x52),
+            Text = Rgb(0xF2, 0xF4, 0xFA),
+            Accent = Rgb(0x7A, 0x65, 0xFF),
             Success = Rgb(0x58, 0xA6, 0xFF),
             Warning = Rgb(0xC9, 0xD2, 0xDE),
             Error = Rgb(0xFF, 0x9A, 0x3D)
@@ -88,16 +84,6 @@ namespace Schlusselbild.Ui
         private static TMP_FontAsset fontAsset;
         private static TextScale currentScale = TextScale.Medium;
         private static bool colorblindSafe;
-
-        public static UiPalette DefaultPalette
-        {
-            get { return DefaultPaletteValue; }
-        }
-
-        public static UiPalette ColorblindSafePalette
-        {
-            get { return ColorblindPaletteValue; }
-        }
 
         public static bool ColorblindSafe
         {

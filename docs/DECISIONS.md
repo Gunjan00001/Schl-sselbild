@@ -189,3 +189,14 @@ Format: **Decision — Reason — Consequence.** Newest sections are appended; t
   graphify to be used where it adds value.
 - **Consequence:** Docs are versioned with the code; the graph is a generated artefact under
   `docs/graph/`.
+
+## D21 — Soft Glass visual direction
+
+- **Decision:** Replace the flat dark theme with a "Soft Glass" look: navy gradient backdrop,
+  layered panels with a top sheen, softer/larger radii, deeper shadows, and a violet accent.
+- **Reason:** The previous UI looked cheap/plain; the user chose Soft Glass from three mocked
+  directions (sci-fi HUD, soft glass, warm editorial) as the most premium and headset-native.
+- **Consequence:** Real blur/shader glass is not used — UGUI `Image` cannot blur the scene
+  behind it cheaply on XR2, so sheen gradients and translucent-looking surfaces fake the
+  depth. Accent changes from blue `#4F9CFF` to violet `#7A65FF`; accessibility rules
+  (icon + word + colour, AA contrast, S/M/L text scale) are unchanged.

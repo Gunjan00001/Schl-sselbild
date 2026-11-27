@@ -49,7 +49,7 @@ Headless (Editor must be closed):
 
 `DevTools.BuildAndroid` configures everything deterministically:
 
-- `com.schlusselbild.quest`, version `0.5.0` (code 5), min API 32
+- `com.schlusselbild.quest`, version `0.7.0` (code 9), min API 32
 - **IL2CPP**, **ARM64**, **Linear** colour space
 - Android SDK/NDK/JDK from the editor's `PlaybackEngines/AndroidPlayer`, set via
   `UnityEditor.Android.AndroidExternalToolsSettings`

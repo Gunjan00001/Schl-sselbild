@@ -11,7 +11,6 @@ namespace Schlusselbild.App
     {
         public const float CanvasWidthPixels = 1240f;
         public const float CanvasHeightPixels = 940f;
-        public const float CanvasDistanceMeters = 1f;
         public const float CanvasVerticalOffset = -0.04f;
 
         private const int PlacementSettleFrames = 60;
@@ -173,6 +172,13 @@ namespace Schlusselbild.App
 
             RectTransform background = UiFactory.Panel(canvasRect, "Background", UiTheme.Palette.Background, true);
             UiFactory.Stretch(background, 0f, 0f, 0f, 0f);
+
+            RectTransform glow = UiFactory.CreateRect("BackdropGlow", canvasRect);
+            UiFactory.Stretch(glow, 0f, 0f, 0f, 0f);
+            Image glowImage = glow.gameObject.AddComponent<Image>();
+            UiSprites.ApplyGradient(glowImage);
+            glowImage.color = UiTheme.WithAlpha(UiTheme.Palette.Accent, 0.10f);
+            glowImage.raycastTarget = false;
 
             screensRoot = UiFactory.CreateRect("Screens", canvasRect);
             UiFactory.Stretch(screensRoot, 0f, 0f, 0f, 0f);

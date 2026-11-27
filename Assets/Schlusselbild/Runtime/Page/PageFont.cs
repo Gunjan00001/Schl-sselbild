@@ -108,16 +108,6 @@ namespace Schlusselbild.Page
             0x00, 0x00, 0x08, 0x15, 0x02, 0x00, 0x00
         };
 
-        public static int MeasureWidth(string text)
-        {
-            if (string.IsNullOrEmpty(text))
-            {
-                return 0;
-            }
-
-            return text.Length * Advance;
-        }
-
         public static bool IsSet(char character, int x, int y)
         {
             if (x < 0 || x >= GlyphWidth || y < 0 || y >= GlyphHeight)

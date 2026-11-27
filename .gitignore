@@ -68,3 +68,7 @@ legacy/python/.venv/
 legacy/python/**/__pycache__/
 legacy/python/**/*.pyc
 legacy/python/**/*.egg-info/
+
+# graphify / brainstorming artefacts
+/graphify-out/
+/.superpowers/

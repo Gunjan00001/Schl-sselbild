@@ -10,7 +10,8 @@ This is a college / proof-of-concept project, **not** a production security prod
 
 ## Status
 
-**0.6.1** — feature-complete for the MVP scope, verified in the Editor and building a Quest 3 APK.
+**0.7.0** — feature-complete for the MVP scope, verified in the Editor and building a Quest 3 APK.
+The UI uses the Soft Glass direction (navy backdrop, sheen panels, violet accent).
 
 - **Encode:** type a secret (in-world keypad) → AES-256-GCM → segmented QR page, viewable and exportable as PNG.
 - **Scan:** point the passthrough camera at a page → decode every QR → decrypt → show the plaintext.

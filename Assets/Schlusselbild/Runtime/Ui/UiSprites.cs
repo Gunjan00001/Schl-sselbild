@@ -7,6 +7,51 @@ namespace Schlusselbild.Ui
     {
         private static readonly Dictionary<int, Sprite> FillCache = new Dictionary<int, Sprite>();
         private static readonly Dictionary<int, Sprite> StrokeCache = new Dictionary<int, Sprite>();
+        private static Sprite gradient;
+
+        public const float GradientBottomAlpha = 0.55f;
+
+        /// <summary>White vertical sheen, opaque at the top and fading towards the bottom.
+        /// Tint it to give surfaces the soft-glass highlight.</summary>
+        public static Sprite VerticalGradient()
+        {
+            if (gradient != null)
+            {
+                return gradient;
+            }
+
+            const int height = 128;
+            Texture2D texture = new Texture2D(1, height, TextureFormat.RGBA32, false);
+            texture.wrapMode = TextureWrapMode.Clamp;
+            texture.filterMode = FilterMode.Bilinear;
+            texture.hideFlags = HideFlags.HideAndDontSave;
+
+            Color32[] pixels = new Color32[height];
+            for (int y = 0; y < height; y++)
+            {
+                float t = y / (float)(height - 1);
+                float alpha = Mathf.Lerp(GradientBottomAlpha, 1f, t);
+                pixels[y] = new Color32(255, 255, 255, (byte)Mathf.RoundToInt(alpha * 255f));
+            }
+
+            texture.SetPixels32(pixels);
+            texture.Apply(false, false);
+
+            gradient = Sprite.Create(texture, new Rect(0f, 0f, 1f, height), new Vector2(0.5f, 0.5f), 100f);
+            gradient.hideFlags = HideFlags.HideAndDontSave;
+            return gradient;
+        }
+
+        public static void ApplyGradient(UnityEngine.UI.Image image)
+        {
+            if (image == null)
+            {
+                return;
+            }
+
+            image.sprite = VerticalGradient();
+            image.type = UnityEngine.UI.Image.Type.Simple;
+        }
 
         public static Sprite RoundedFill(int radius)
         {
@@ -18,7 +63,7 @@ namespace Schlusselbild.Ui
 
             int border = radius + 1;
             int size = border * 2 + 2;
-            Sprite sprite = Build(size, radius, 1f, 0f, 0f);
+            Sprite sprite = Build(size, radius, 1f, 0f);
             FillCache[radius] = sprite;
             return sprite;
         }
@@ -35,12 +80,12 @@ namespace Schlusselbild.Ui
 
             int border = radius + 1;
             int size = border * 2 + 2;
-            Sprite sprite = Build(size, radius, thickness, size, 0f);
+            Sprite sprite = Build(size, radius, thickness, size);
             StrokeCache[key] = sprite;
             return sprite;
         }
 
-        private static Sprite Build(int size, int radius, float innerInset, float innerSize, float unused)
+        private static Sprite Build(int size, int radius, float innerInset, float innerSize)
         {
             float innerHeight = innerSize > 0f ? innerSize : size * 0.5f;
             float innerRadius = Mathf.Max(0f, radius - innerInset);

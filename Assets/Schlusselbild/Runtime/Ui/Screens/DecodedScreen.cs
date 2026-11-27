@@ -26,7 +26,7 @@ namespace Schlusselbild.Ui.Screens
             BuildRoot(parent, "DecodedScreen");
             RectTransform body = BuildBody("Decoded");
 
-            RectTransform bannerPanel = UiFactory.Panel(body, "Banner", palette.Panel, true);
+            RectTransform bannerPanel = UiFactory.Panel(body, "Banner", palette.Panel, true, 38, true);
             UiFactory.SetPreferredHeight(bannerPanel, 76f);
             banner = UiFactory.Label(bannerPanel, "BannerText", string.Empty, UiTheme.BodyFontSize, TextAlignmentOptions.Center, palette.Text);
             UiFactory.Stretch((RectTransform)banner.transform, 16f, 16f, 8f, 8f);

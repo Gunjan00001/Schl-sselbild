@@ -188,11 +188,6 @@ namespace Schlusselbild.Ui
 
         public event Action<string> TextChanged;
 
-        public KeypadModel Model
-        {
-            get { return model; }
-        }
-
         public string Text
         {
             get { return model == null ? string.Empty : model.Text; }
